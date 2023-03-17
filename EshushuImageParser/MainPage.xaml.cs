@@ -14,20 +14,35 @@ public partial class MainPage : ContentPage
 
 	private void Govno(object sender, EventArgs e)
 	{
-		var html = @"https://e-shuushuu.net/search/results/?page=1&tags=75954";
-
         WebClient webClient = new WebClient();        
 
         HtmlWeb web = new HtmlWeb();
 
-        var htmlDoc = web.Load(html);
+        int page = 1;
+        int count = 0;
 
-		var nodes = htmlDoc.DocumentNode.SelectNodes("//div/a").Skip(3);
+        while (true)
+        {
+            var html = $"https://e-shuushuu.net/search/results/?page={page}&tags=75954";
+            var htmlDoc = web.Load(html);
+            var nodes = htmlDoc.DocumentNode.SelectNodes("//div/a[contains(@class, 'thumb_image')]");//.Skip(3)
 
-		var image = nodes.First().Attributes["href"].Value;
-        webClient.DownloadFile("https://e-shuushuu.net" + image, path+image.Substring(7));
+            if (nodes.Count() == 0)
+                break;
 
-        TestImage.Source = ImageSource.FromUri(new Uri("https://e-shuushuu.net" + image));
+            foreach (var node in nodes)
+            {
+                var image = node.Attributes["href"].Value;
+                webClient.DownloadFile("https://e-shuushuu.net" + image, path + image.Substring(7));
+
+                //TestImage.Source = ImageSource.FromUri(new Uri("https://e-shuushuu.net" + image));
+            }
+
+            count += nodes.Count();
+            page++;
+        }
+
+        Liba.Text = "Всего скачано: " + count;
     }
 
 	private void ImageCounter(object sender, EventArgs e)
