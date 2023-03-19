@@ -41,7 +41,7 @@ public partial class MainPage : ContentPage
             count += nodes.Count();
             page++;
         }
-
+        //test
         Liba.Text = "Всего скачано: " + count;
     }
 
