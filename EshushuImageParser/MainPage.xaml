@@ -51,6 +51,7 @@
                     HorizontalOptions="Center" />
 
             </VerticalStackLayout>
+            
         </HorizontalStackLayout>
     </ScrollView>
 
