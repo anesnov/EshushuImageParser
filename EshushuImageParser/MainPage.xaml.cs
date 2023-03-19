@@ -25,9 +25,9 @@ public partial class MainPage : ContentPage
         {
             var html = $"https://e-shuushuu.net/search/results/?page={page}&tags=75954";
             var htmlDoc = web.Load(html);
-            var nodes = htmlDoc.DocumentNode.SelectNodes("//div/a[contains(@class, 'thumb_image')]");
+            var nodes = htmlDoc.DocumentNode.SelectNodes("//div/a[contains(@class, 'thumb_image')]");//.Skip(3)
 
-            if (nodes == null)
+            if (nodes.Count() == 0)
                 break;
 
             foreach (var node in nodes)
@@ -48,20 +48,20 @@ public partial class MainPage : ContentPage
 	private void ImageCounter(object sender, EventArgs e)
 	{
 		int page = 1;
-		int count = 0;        
+		int count = 0;
+        
         HtmlWeb web = new HtmlWeb();
+        IEnumerable<HtmlNode> nodes;
+        int results = 1;
 
-        while (true) 
+        while (results > 0) 
 		{
             var html = $"https://e-shuushuu.net/search/results/?page={page}&tags=75954";
             var htmlDoc = web.Load(html);
-            var nodes = htmlDoc.DocumentNode.SelectNodes("//div/a[contains(@class, 'thumb_image')]");
-            if (nodes == null)
-                break;
-            count += nodes.Count();
+            results = htmlDoc.DocumentNode.SelectNodes("//div/a").Skip(3).Count();
+            count += results;
             page++;
         }
-
         Counted.Text = "Total images: " + count;
     }
 }
